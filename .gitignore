@@ -1,0 +1,59 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+
+# renv
+renv/library/
+renv/python/
+renv/staging/
+renv/cache/
+renv/settings.dcf
+
+# RStudio
+.Rproj.user/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# venv
+env/
+venv/
+
+# Conda
+.scrna_py/
+*.conda/
+*.env/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temp files
+*.log
+*.out
+*.tmp
+
+# Shiny
+rsconnect/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/raw/
+data/processed/
+*.h5
+*.loom
+*.rds
