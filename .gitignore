@@ -52,8 +52,7 @@ rsconnect/
 .idea/
 
 # Data
-data/raw/
-data/processed/
+data/
 *.h5
 *.loom
 *.rds
