@@ -12,3 +12,18 @@ get_filetype <- function(file_df) {
 
   return(filetype)
 }
+
+read_file <- function(filepath, filetype) {
+  errors <- c()
+  if (filetype == "h5") {
+    tryCatch(
+      {
+        return(Read10X_h5(filename = filepath))
+      },
+      error = function(e) {
+        errors <- c(errors, "Invalid h5 file")
+        return(errors)
+      }
+    )
+  }
+}

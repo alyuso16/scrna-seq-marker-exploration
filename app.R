@@ -7,7 +7,6 @@ source("R/validation.R")
 
 options(shiny.maxRequestSize = 1000 * 1024^2)
 
- 
 shinyApp(
   ui = fluidPage(theme = shinytheme("cosmo"),
     navbarPage("scRNa-seq",

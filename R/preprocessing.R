@@ -12,18 +12,7 @@ run_preprocessing <- function(filepath, filetype) {
 
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
-  errors <- c()
-  if (filetype == "h5") {
-    tryCatch(
-      {
-        seurat_obj.data <- Read10X_h5(filename = filepath)
-      },
-      error = function(e) {
-        errors <- c(errors, "Invalid h5 file")
-        return(errors)
-      }
-    )
-  }
+  seurat_obj.data <- read_file(filepath, filetype)
 
   if (is_multimodal(seurat_obj.data)) {
     counts <- seurat_obj.data$"Gene Expression"
