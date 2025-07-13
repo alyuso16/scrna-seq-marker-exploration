@@ -1,8 +1,10 @@
-run_preprocessing <- function(filepath, filetype) {
+run_preprocessing <- function(filepath, filetype, progress = NULL) {
   library(Seurat)
   library(sctransform)
   library(DoubletFinder)
   library(tidyverse)
+
+  if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
   if (filetype == "h5") {
     seurat_obj.data <- Read10X_h5(filename = filepath)
@@ -16,6 +18,8 @@ run_preprocessing <- function(filepath, filetype) {
     )
   }
 
+  if (!is.null(progress)) progress$inc(0.05, message = "Filtering data...")
+
   seurat_obj <- PercentageFeatureSet(
     seurat_obj,
     pattern = "^MT-",
@@ -27,8 +31,15 @@ run_preprocessing <- function(filepath, filetype) {
 
   seurat_obj <- subset(seurat_obj, subset = nFeature_RNA > lower_lim_nfeature & nFeature_RNA < upper_lim_nfeature & nCount_RNA < upper_lim_ncount & percent.mt < 15)
 
+  if (!is.null(progress)) progress$inc(0.05, message = "Running SCTransform...")
+
   seurat_obj <- SCTransform(seurat_obj)
+
+  if (!is.null(progress)) progress$inc(0.1, message = "Running PCA...")
+
   seurat_obj <- RunPCA(seurat_obj)
+
+  if (!is.null(progress)) progress$inc(0.1, message = "Detecting doublets...")
 
   # Doublet Detection
   sweep.res <- paramSweep(seurat_obj, PCs = 1:10, sct = TRUE)
@@ -48,8 +59,12 @@ run_preprocessing <- function(filepath, filetype) {
     sct = TRUE
   )
 
+  if (!is.null(progress)) progress$inc(0.3, message = "Filtering doublets...")
+
   doublet_col <- grep("DF.classifications", colnames(seurat_obj@meta.data), value = TRUE)
   seurat_obj <- subset(seurat_obj, subset = !!as.name(doublet_col) == "Singlet")
+
+  if (!is.null(progress)) progress$inc(0.1, message = "Selecting PCs...")
 
   # Choose PCs
   all_pc_std <- seurat_obj[["pca"]]@stdev
@@ -63,9 +78,13 @@ run_preprocessing <- function(filepath, filetype) {
     cutoff_pc <- 10
   }
 
+  if (!is.null(progress)) progress$inc(0.1, message = "Finding neighbors, clustering, and performing UMAP...")
+
   seurat_obj <- FindNeighbors(seurat_obj, dims = 1:cutoff_pc)
   seurat_obj <- FindClusters(seurat_obj)
   seurat_obj <- RunUMAP(seurat_obj, dims = 1:cutoff_pc)
+
+  if (!is.null(progress)) progress$set(message = "Finished", value = 1)
 
   return(seurat_obj)
 }
