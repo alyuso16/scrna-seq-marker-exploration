@@ -1,14 +1,26 @@
-run_preprocessing <- function(filepath, filetype, progress = NULL) {
+run_preprocessing <- function(filepath, filetype) {
   library(Seurat)
   library(sctransform)
   library(DoubletFinder)
   library(tidyverse)
 
+  source("R/validation.R")
+
+  progress <- shiny::Progress$new()
+  on.exit(progress$close())
+  progress$set(message = NULL, value = 0)
+
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
   if (filetype == "h5") {
     seurat_obj.data <- Read10X_h5(filename = filepath)
-    counts <- seurat_obj.data$"Gene Expression"
+
+    if (is_multimodal(seurat_obj.data)) {
+      counts <- seurat_obj.data$"Gene Expression"
+    } else {
+      counts <- seurat_obj.data
+    }
+    
 
     seurat_obj <- CreateSeuratObject(
       counts = counts,
