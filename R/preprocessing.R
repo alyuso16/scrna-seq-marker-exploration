@@ -12,23 +12,31 @@ run_preprocessing <- function(filepath, filetype) {
 
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
+  errors <- c()
   if (filetype == "h5") {
-    seurat_obj.data <- Read10X_h5(filename = filepath)
-
-    if (is_multimodal(seurat_obj.data)) {
-      counts <- seurat_obj.data$"Gene Expression"
-    } else {
-      counts <- seurat_obj.data
-    }
-    
-
-    seurat_obj <- CreateSeuratObject(
-      counts = counts,
-      project = "seurat_obj",
-      min.cells = 3,
-      min.features = 200
+    tryCatch(
+      {
+        seurat_obj.data <- Read10X_h5(filename = filepath)
+      },
+      error = function(e) {
+        errors <- c(errors, "Invalid h5 file")
+        return(errors)
+      }
     )
   }
+
+  if (is_multimodal(seurat_obj.data)) {
+    counts <- seurat_obj.data$"Gene Expression"
+  } else {
+    counts <- seurat_obj.data
+  }
+
+  seurat_obj <- CreateSeuratObject(
+    counts = counts,
+    project = "seurat_obj",
+    min.cells = 3,
+    min.features = 200
+  )
 
   if (!is.null(progress)) progress$inc(0.05, message = "Filtering data...")
 

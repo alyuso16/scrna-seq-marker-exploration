@@ -3,9 +3,11 @@ library(shinythemes)
 
 source("R/preprocessing.R")
 source("R/umap_plots.R")
+source("R/validation.R")
 
 options(shiny.maxRequestSize = 1000 * 1024^2)
 
+ 
 shinyApp(
   ui = fluidPage(theme = shinytheme("cosmo"),
     navbarPage("scRNa-seq",
@@ -22,10 +24,7 @@ shinyApp(
   server <- function(input, output) {
     seurat_obj <- reactive({
       req(input$file)
-      filetype <- tolower(tools::file_ext(input$file$name))
-      validate(need(filetype %in% c("h5"), "Upload .h5 file"))
-
-      run_preprocessing(input$file$datapath, filetype = filetype)
+      run_preprocessing(input$file$datapath, filetype = get_filetype(input$file))
     })
 
     output$umap <- renderPlot({
