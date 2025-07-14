@@ -1,8 +1,16 @@
 is_multimodal <- function(seurat_obj.data) {
-  if (is.list(seurat_obj.data) && all(sapply(seurat_obj.data, is.matrix))) {
+  if (is.list(seurat_obj.data)) {
     return(TRUE)
   } else {
     return(FALSE)
+  }
+}
+
+is_seurat_obj <- function(obj) {
+  if (!inherits(obj, "Seurat")) {
+    return(FALSE)
+  } else {
+    return(TRUE)
   }
 }
 
@@ -14,16 +22,15 @@ get_filetype <- function(file_df) {
 }
 
 read_file <- function(filepath, filetype) {
-  errors <- c()
-  if (filetype == "h5") {
-    tryCatch(
-      {
-        return(Read10X_h5(filename = filepath))
-      },
-      error = function(e) {
-        errors <- c(errors, "Invalid h5 file")
-        return(errors)
+  tryCatch(
+    {
+      if (filetype == "h5") {
+        data <- Read10X_h5(filename = filepath)
+        return(data)
       }
-    )
-  }
+    },
+    error = function(e) {
+      validate(need(FALSE, "Failed to read file"))
+    }
+  )
 }
