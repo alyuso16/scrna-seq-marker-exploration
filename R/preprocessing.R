@@ -1,4 +1,4 @@
-run_preprocessing <- function(filepath, filetype) {
+run_preprocessing <- function(file_df) {
   library(Seurat)
   library(sctransform)
   library(DoubletFinder)
@@ -12,7 +12,7 @@ run_preprocessing <- function(filepath, filetype) {
 
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
-  seurat_obj.data <- read_file(filepath, filetype)
+  seurat_obj.data <- read_file(file_df)
 
   if (is_multimodal(seurat_obj.data)) {
     counts <- seurat_obj.data$"Gene Expression"
@@ -95,5 +95,17 @@ run_preprocessing <- function(filepath, filetype) {
 
   if (!is.null(progress)) progress$set(message = "Finished", value = 1)
 
+  saveRDS(seurat_obj, "data/GSM8352048_seurat_obj.rds")
   return(seurat_obj)
+}
+
+get_features <- function(seurat_obj) {
+  source("R/validation.R")
+
+  if (is_seurat_obj(seurat_obj)) {
+    markers <- colnames(seurat_obj@meta.data)
+    return(markers)
+  } else {
+    validate(need(FALSE, "get_features needs a Seurat object"))
+  }
 }
