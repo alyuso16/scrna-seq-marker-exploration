@@ -44,6 +44,10 @@ run_preprocessing <- function(file_df) {
 
   seurat_obj <- SCTransform(seurat_obj)
 
+  sct_data <- GetAssayData(seurat_obj, assay = "SCT", slot = "data")
+  nonzero_features <- rowSums(sct_data != 0) > 0
+  seurat_obj <- subset(seurat_obj, features = rownames(sct_data)[nonzero_features])
+
   if (!is.null(progress)) progress$inc(0.1, message = "Running PCA...")
 
   seurat_obj <- RunPCA(seurat_obj)
@@ -103,7 +107,7 @@ get_features <- function(seurat_obj) {
   source("R/validation.R")
 
   if (is_seurat_obj(seurat_obj)) {
-    markers <- colnames(seurat_obj@meta.data)
+    markers <- rownames(seurat_obj)
     return(markers)
   } else {
     validate(need(FALSE, "get_features needs a Seurat object"))

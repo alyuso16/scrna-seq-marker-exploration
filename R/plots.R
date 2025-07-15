@@ -12,19 +12,21 @@ plot_umap <- function(seurat_obj) {
   }
 }
 
-plot_feature <- function(seurat_obj, feature) {
+plot_feature <- function(seurat_obj, marker) {
   library(Seurat)
 
   source("R/validation.R")
 
   if (is_seurat_obj(seurat_obj)) {
-    feature_plot <- FeaturePlot(
-      seurat_obj,
-      features = feature,
-      cols = c("lightgrey", "blue")
-    )
+    if (marker %in% rownames(seurat_obj)) {
+      feature_plot <- FeaturePlot(
+        seurat_obj,
+        features = marker,
+        cols = c("lightgrey", "blue")
+      )
 
-    return(feature_plot)
+      return(feature_plot)
+    }
   } else {
     validate(need(FALSE, "Feature plotting function did not receive a seurat object"))
   }

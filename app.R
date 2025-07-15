@@ -56,7 +56,7 @@ shinyApp(
         plot_umap(seurat_obj())
       } else if (input$selected_plot == "Features") {
         req(input$selected_marker)
-        plot_feature(seurat_obj(), feature = input$selected_marker)
+        plot_feature(seurat_obj(), marker = input$selected_marker)
       }
     })
 
