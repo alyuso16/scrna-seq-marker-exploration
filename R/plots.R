@@ -4,7 +4,13 @@ plot_umap <- function(seurat_obj) {
   source("R/validation.R")
 
   if (is_seurat_obj(seurat_obj)) {
-    umap <- DimPlot(seurat_obj, reduction = "umap", label = TRUE, repel = TRUE)
+    umap <- DimPlot(
+      seurat_obj,
+      reduction = "umap",
+      pt.size = 0.1,
+      label = TRUE,
+      repel = TRUE
+    )
 
     return(umap)
   } else {
@@ -22,6 +28,7 @@ plot_feature <- function(seurat_obj, marker) {
       feature_plot <- FeaturePlot(
         seurat_obj,
         features = marker,
+        pt.size = 0.1,
         cols = c("lightgrey", "blue")
       )
 

@@ -12,15 +12,21 @@ shinyApp(
       tabPanel("Tab 1",
         useShinyjs(),
         sidebarPanel(
-          div(
-            fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
-            actionButton("run", "Run", icon = icon("play"))
-          )
+          fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
+          actionButton("run", "Run", icon = icon("play"))
         ),
         mainPanel(
-          plotOutput("plot"),
-          uiOutput("plot_select"),
-          uiOutput("marker_select")
+          fluidRow(
+            column(
+              width = 9,
+              plotOutput("plot")
+            ),
+            column(
+              width = 3,
+              uiOutput("plot_select"),
+              uiOutput("marker_select")
+            )
+          )
         )
       )
     )
