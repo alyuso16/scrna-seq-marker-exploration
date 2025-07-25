@@ -99,7 +99,6 @@ run_preprocessing <- function(file_df) {
 
   if (!is.null(progress)) progress$set(message = "Finished", value = 1)
 
-  saveRDS(seurat_obj, "data/GSM8352048_seurat_obj.rds")
   return(seurat_obj)
 }
 
