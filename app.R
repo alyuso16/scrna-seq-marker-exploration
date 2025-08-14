@@ -7,12 +7,15 @@ source("R/plots.R")
 source("R/validation.R")
 
 ui = fluidPage(theme = shinytheme("cosmo"),
-  navbarPage("scRNa-seq",
+  navbarPage("scRNA-seq",
     tabPanel("Tab 1",
       useShinyjs(),
       sidebarPanel(
         fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
-        actionButton("run", "Run", icon = icon("play"))
+        actionButton("run", "Run", icon = icon("play")),
+
+        textInput("save_name", "Save Seurat object as:", value = "seurat_obj"),
+        downloadButton("download_object", "Download Seurat Object"),
       ),
       mainPanel(
         fluidRow(
@@ -54,6 +57,16 @@ server <- function(input, output) {
       run_preprocessing(input$file)
     }
   })
+
+  output$download_object <- downloadHandler(
+    filename = function() {
+      paste(input$save_name, ".rds")
+    },
+    content = function(file) {
+      req(seurat_obj())
+      saveRDS(seurat_obj(), file)
+    }
+  )
 
   output$plot <- renderPlot({
     req(seurat_obj(), input$selected_plot)
