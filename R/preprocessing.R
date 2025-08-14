@@ -6,11 +6,10 @@ library(tidyverse)
 source("R/validation.R")
 
 run_preprocessing <- function(file_df) {
-  
-
   progress <- shiny::Progress$new()
   on.exit(progress$close())
   progress$set(message = NULL, value = 0)
+  progress_inc <- 1/9
 
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 
@@ -29,7 +28,7 @@ run_preprocessing <- function(file_df) {
     min.features = 200
   )
 
-  if (!is.null(progress)) progress$inc(0.05, message = "Filtering data...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Filtering data...")
 
   seurat_obj <- PercentageFeatureSet(
     seurat_obj,
@@ -42,7 +41,7 @@ run_preprocessing <- function(file_df) {
 
   seurat_obj <- subset(seurat_obj, subset = nFeature_RNA > lower_lim_nfeature & nFeature_RNA < upper_lim_nfeature & nCount_RNA < upper_lim_ncount & percent.mt < 15)
 
-  if (!is.null(progress)) progress$inc(0.05, message = "Running SCTransform...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Running SCTransform...")
 
   seurat_obj <- SCTransform(seurat_obj)
 
@@ -50,11 +49,10 @@ run_preprocessing <- function(file_df) {
   nonzero_features <- rowSums(sct_data != 0) > 0
   seurat_obj <- subset(seurat_obj, features = rownames(sct_data)[nonzero_features])
 
-  if (!is.null(progress)) progress$inc(0.1, message = "Running PCA...")
-
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Running PCA...")
   seurat_obj <- RunPCA(seurat_obj)
 
-  if (!is.null(progress)) progress$inc(0.1, message = "Detecting doublets...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Detecting doublets...")
 
   # Doublet Detection
   sweep.res <- paramSweep(seurat_obj, PCs = 1:10, sct = TRUE)
@@ -74,12 +72,12 @@ run_preprocessing <- function(file_df) {
     sct = TRUE
   )
 
-  if (!is.null(progress)) progress$inc(0.3, message = "Filtering doublets...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Filtering doublets...")
 
   doublet_col <- grep("DF.classifications", colnames(seurat_obj@meta.data), value = TRUE)
   seurat_obj <- subset(seurat_obj, subset = !!as.name(doublet_col) == "Singlet")
 
-  if (!is.null(progress)) progress$inc(0.1, message = "Selecting PCs...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Selecting PCs...")
 
   # Choose PCs
   all_pc_std <- seurat_obj[["pca"]]@stdev
@@ -93,10 +91,16 @@ run_preprocessing <- function(file_df) {
     cutoff_pc <- 10
   }
 
-  if (!is.null(progress)) progress$inc(0.1, message = "Finding neighbors, clustering, and performing UMAP...")
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Finding neighbors...")
 
   seurat_obj <- FindNeighbors(seurat_obj, dims = 1:cutoff_pc)
+
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Clustering...")
+
   seurat_obj <- FindClusters(seurat_obj)
+
+  if (!is.null(progress)) progress$inc(progress_inc, message = "Running UMAP...")
+
   seurat_obj <- RunUMAP(seurat_obj, dims = 1:cutoff_pc)
 
   if (!is.null(progress)) progress$set(message = "Finished", value = 1)

@@ -92,7 +92,7 @@ server <- function(input, output) {
 
   output$download_object <- downloadHandler(
     filename = function() {
-      paste(input$save_name, ".rds")
+      paste0(trimws(input$save_name), ".rds")
     },
     content = function(file) {
       req(seurat_obj())
