@@ -11,83 +11,44 @@ ui = page_navbar(
   title = "scRNA-seq",
   useShinyjs(),
   tabPanel("Tab 1",
-    sidebarPanel(
-      div(
-        style = "margin-bottom: 20px;",
-        fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
-        uiOutput("upload_msg"),
-      ),
-
-      div(
-        style = "margin-bottom: 20px;",
-        actionButton("run", "Run", icon = icon("play")),
-      ),
-
-      textInput("save_name", "Save Seurat object as:"),
-      downloadButton("download_object", "Download Seurat Object"),
-    ),
-    mainPanel(
-      fluidRow(
-        column(
-          width = 9,
-          plotOutput("umap_plot")
+    sidebarLayout(
+      sidebarPanel(
+        div(
+          style = "margin-bottom: 20px;",
+          fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
+          uiOutput("upload_msg"),
         ),
-      ),
-      fluidRow(
-        column(
-          width = 9,
-          plotOutput(("feature_plot"))
+
+        div(
+          style = "margin-bottom: 20px;",
+          actionButton("run", "Run", icon = icon("play")),
         ),
-        
-        column(
-          width = 3,
-          uiOutput("marker_select")
+
+        textInput("save_name", "Save Seurat object as:"),
+        downloadButton("download_object", "Download Seurat Object"),
+      ),
+      mainPanel(
+        fluidRow(
+          column(
+            width = 9,
+            plotOutput("umap_plot")
+          ),
+        ),
+        fluidRow(
+          column(
+            width = 9,
+            plotOutput(("feature_plot"))
+          ),
+          
+          column(
+            width = 3,
+            uiOutput("marker_select")
+          )
         )
       )
     )
   )
 )
-
-# ui = fluidPage(
-#   navbarPage("scRNA-seq",
-#     tabPanel("Tab 1",
-#       useShinyjs(),
-#       sidebarPanel(
-#         div(
-#           style = "margin-bottom: 20px;",
-#           fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
-#           uiOutput("upload_msg"),
-#         ),
-#         div(
-#           style = "margin-bottom: 20px;",
-#           actionButton("run", "Run", icon = icon("play")),
-#         ),
-
-#         textInput("save_name", "Save Seurat object as:"),
-#         downloadButton("download_object", "Download Seurat Object"),
-#       ),
-#       mainPanel(
-#         fluidRow(
-#           column(
-#             width = 9,
-#             plotOutput("umap_plot")
-#           ),
-#         ),
-#         fluidRow(
-#           column(
-#             width = 9,
-#             plotOutput(("feature_plot"))
-#           ),
-          
-#           column(
-#             width = 3,
-#             uiOutput("marker_select")
-#           )
-#         )
-#       )
-#     )
-#   )
-# )
 
 server <- function(input, output) {
   options(shiny.maxRequestSize = 1000 * 1024^2)
