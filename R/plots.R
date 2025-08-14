@@ -1,8 +1,8 @@
+library(Seurat)
+
+source("R/validation.R")
+
 plot_umap <- function(seurat_obj) {
-  library(Seurat)
-
-  source("R/validation.R")
-
   if (is_seurat_obj(seurat_obj)) {
     umap <- DimPlot(
       seurat_obj,
@@ -19,10 +19,6 @@ plot_umap <- function(seurat_obj) {
 }
 
 plot_feature <- function(seurat_obj, marker) {
-  library(Seurat)
-
-  source("R/validation.R")
-
   if (is_seurat_obj(seurat_obj)) {
     if (marker %in% rownames(seurat_obj)) {
       feature_plot <- FeaturePlot(

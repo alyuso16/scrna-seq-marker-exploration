@@ -1,10 +1,12 @@
-run_preprocessing <- function(file_df) {
-  library(Seurat)
-  library(sctransform)
-  library(DoubletFinder)
-  library(tidyverse)
+library(Seurat)
+library(sctransform)
+library(DoubletFinder)
+library(tidyverse)
 
-  source("R/validation.R")
+source("R/validation.R")
+
+run_preprocessing <- function(file_df) {
+  
 
   progress <- shiny::Progress$new()
   on.exit(progress$close())
@@ -103,8 +105,6 @@ run_preprocessing <- function(file_df) {
 }
 
 get_features <- function(seurat_obj) {
-  source("R/validation.R")
-
   if (is_seurat_obj(seurat_obj)) {
     markers <- rownames(seurat_obj)
     return(markers)
