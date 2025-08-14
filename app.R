@@ -11,7 +11,6 @@ ui = fluidPage(theme = shinytheme("cosmo"),
   navbarPage("scRNA-seq",
     tabPanel("Tab 1",
       useShinyjs(),
-
       sidebarPanel(
         div(
           style = "margin-bottom: 20px;",
@@ -26,17 +25,21 @@ ui = fluidPage(theme = shinytheme("cosmo"),
         textInput("save_name", "Save Seurat object as:"),
         downloadButton("download_object", "Download Seurat Object"),
       ),
-
       mainPanel(
         fluidRow(
           column(
             width = 9,
-            plotOutput("plot")
+            plotOutput("umap_plot")
           ),
-
+        ),
+        fluidRow(
+          column(
+            width = 9,
+            plotOutput(("feature_plot"))
+          ),
+          
           column(
             width = 3,
-            uiOutput("plot_select"),
             uiOutput("marker_select")
           )
         )
@@ -97,15 +100,16 @@ server <- function(input, output) {
     }
   )
 
-  output$plot <- renderPlot({
-    req(seurat_obj(), input$selected_plot)
+  output$umap_plot <- renderPlot({
+    req(seurat_obj())
 
-    if (input$selected_plot == "UMAP") {
-      plot_umap(seurat_obj())
-    } else if (input$selected_plot == "Features") {
-      req(input$selected_marker)
-      plot_feature(seurat_obj(), marker = input$selected_marker)
-    }
+    plot_umap(seurat_obj())
+  })
+
+  output$feature_plot <- renderPlot({
+    req(seurat_obj(), input$selected_marker)
+
+    plot_feature(seurat_obj(), marker = input$selected_marker)
   })
 
   output$marker_select <- renderUI({
@@ -115,16 +119,6 @@ server <- function(input, output) {
       "Select marker gene:",
       choices = get_features(seurat_obj()),
       selected = get_features(seurat_obj())[1]
-    )
-  })
-
-  output$plot_select <- renderUI({
-    req(seurat_obj())
-    selectizeInput(
-      "selected_plot",
-      "Select plot to display:",
-      choices = c("UMAP", "Features"),
-      selected = "UMAP"
     )
   })
 }
