@@ -39,7 +39,7 @@ ui = page_navbar(
             width = 9,
             plotOutput(("feature_plot"))
           ),
-          
+
           column(
             width = 3,
             uiOutput("marker_select")
@@ -89,7 +89,7 @@ server <- function(input, output) {
         }
       )
     )
-    
+
   })
 
   output$download_object <- downloadHandler(

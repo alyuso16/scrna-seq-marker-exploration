@@ -21,11 +21,19 @@ plot_umap <- function(seurat_obj) {
 plot_feature <- function(seurat_obj, marker) {
   if (is_seurat_obj(seurat_obj)) {
     if (marker %in% rownames(seurat_obj)) {
+      vals <- FetchData(seurat_obj, vars = marker)[, 1]
+
+      colors <- if (all(vals == 0)) {
+        c("lightgrey", "lightgrey")
+      } else {
+        c("lightgrey", "blue")
+      }
+
       feature_plot <- FeaturePlot(
         seurat_obj,
         features = marker,
         pt.size = 0.1,
-        cols = c("lightgrey", "blue")
+        cols = colors
       )
 
       return(feature_plot)
