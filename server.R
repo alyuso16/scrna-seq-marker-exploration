@@ -31,6 +31,16 @@ server <- function(input, output) {
     }
   })
 
+  umap_plot <- reactive({
+    req(seurat_obj())
+    plot_umap(seurat_obj())
+  })
+
+  feature_plot <- reactive({
+    req(seurat_obj(), input$selected_marker)
+    plot_feature(seurat_obj(), marker = input$selected_marker)
+  })
+
   output$upload_msg <- renderUI({
     req(input$file)
     filetype <- get_filetype(input$file)
@@ -40,9 +50,9 @@ server <- function(input, output) {
       paste(
         "Uploaded ", filetype, " file,",
         if (filetype == "rds") {
-          "run to skip preprocessing..."
+          "run to skip preprocessing"
         } else if (filetype == "h5") {
-          "run to begin preprocessing..."
+          "run to begin preprocessing"
         }
       )
     )
@@ -51,7 +61,7 @@ server <- function(input, output) {
 
   output$download_object <- downloadHandler(
     filename = function() {
-      paste0(trimws(input$save_name), ".rds")
+      paste0(trimws(input$object_save_name), ".rds")
     },
     content = function(file) {
       req(seurat_obj())
@@ -60,15 +70,11 @@ server <- function(input, output) {
   )
 
   output$umap_plot <- renderPlot({
-    req(seurat_obj())
-
-    plot_umap(seurat_obj())
+    umap_plot()
   })
 
   output$feature_plot <- renderPlot({
-    req(seurat_obj(), input$selected_marker)
-
-    plot_feature(seurat_obj(), marker = input$selected_marker)
+    feature_plot()
   })
 
   output$marker_select <- renderUI({
@@ -80,4 +86,24 @@ server <- function(input, output) {
       selected = get_features(seurat_obj())[1]
     )
   })
+
+  output$download_umap <- downloadHandler(
+    filename = function() {
+      paste0(trimws(input$file$name), "_umap.png")
+    },
+    content = function(file) {
+      req(umap_plot())
+      ggsave(file, plot = umap_plot(), device = "png")
+    }
+  )
+
+  output$download_feature_plot <- downloadHandler(
+    filename = function() {
+      paste0(trimws(input$file$name), "_feature_plot_", input$selected_marker, ".png")
+    },
+    content = function(file) {
+      req(feature_plot())
+      ggsave(file, plot = feature_plot(), device = "png")
+    }
+  )
 }

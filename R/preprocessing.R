@@ -9,7 +9,7 @@ run_preprocessing <- function(file_df) {
   progress <- shiny::Progress$new()
   on.exit(progress$close())
   progress$set(message = NULL, value = 0)
-  progress_inc <- 1/9
+  progress_inc <- 1 / 9
 
   if (!is.null(progress)) progress$inc(0, message = "Loading data...")
 

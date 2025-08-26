@@ -14,13 +14,12 @@ ui <- page_navbar(
           fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
           uiOutput("upload_msg"),
         ),
-
         div(
           style = "margin-bottom: 20px;",
           actionButton("run", "Run", icon = icon("play")),
         ),
 
-        textInput("save_name", "Save Seurat object as:"),
+        textInput("object_save_name", "Save Seurat object as:"),
         downloadButton("download_object", "Download Seurat Object"),
       ),
       mainPanel(
@@ -29,16 +28,20 @@ ui <- page_navbar(
             width = 9,
             plotOutput("umap_plot")
           ),
+          column(
+            width = 3,
+            downloadButton("download_umap", "Download UMAP plot")
+          )
         ),
         fluidRow(
           column(
             width = 9,
             plotOutput(("feature_plot"))
           ),
-
           column(
             width = 3,
-            uiOutput("marker_select")
+            uiOutput("marker_select"),
+            downloadButton("download_feature_plot", "Download this feature plot")
           )
         )
       )
