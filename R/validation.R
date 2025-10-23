@@ -16,7 +16,7 @@ is_seurat_obj <- function(obj) {
 
 get_filetype <- function(file_df) {
   filetype <- tolower(tools::file_ext(file_df$name))
-  validate(need(filetype %in% c("h5", "rds"), "Invalid file type"))
+  validate(need(filetype %in% c("h5", "h5ad", "rds"), "Invalid file type"))
 
   return(filetype)
 }
@@ -30,6 +30,8 @@ read_file <- function(file_df) {
       if (filetype == "h5") {
         data <- Read10X_h5(filepath)
         return(data)
+      } else if (filetype == "h5ad") {
+        data <- ReadH5AD(filepath)
       }
     },
     error = function(e) {

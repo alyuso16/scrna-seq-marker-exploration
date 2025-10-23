@@ -11,6 +11,8 @@ server <- function(input, output) {
   options(shiny.maxRequestSize = 1000 * 1024^2)
 
   disable("run")
+  disable("download_umap")
+  disable("download_feature_plot")
 
   observeEvent(input$file, {
     if (!is.null(input$file)) {
@@ -19,6 +21,22 @@ server <- function(input, output) {
       disable("run")
     }
   })
+
+  # observeEvent(input$file, {
+  #   if (!is.null(input$file)) {
+  #     enable("run")
+  #   } else {
+  #     disable("run")
+  #   }
+  # })
+
+  # observeEvent(input$file, {
+  #   if (!is.null(input$file)) {
+  #     enable("run")
+  #   } else {
+  #     disable("run")
+  #   }
+  # })
 
   seurat_obj <- eventReactive(input$run, {
     req(input$file)
@@ -51,7 +69,7 @@ server <- function(input, output) {
         "Uploaded ", filetype, " file,",
         if (filetype == "rds") {
           "run to skip preprocessing"
-        } else if (filetype == "h5") {
+        } else if (filetype == "h5" | filetype == "h5ad") {
           "run to begin preprocessing"
         }
       )

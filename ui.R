@@ -11,7 +11,7 @@ ui <- page_navbar(
       sidebarPanel(
         div(
           style = "margin-bottom: 20px;",
-          fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5, .rds")),
+          fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5", ".h5ad", ".rds")),
           uiOutput("upload_msg"),
         ),
         div(
