@@ -43,6 +43,16 @@ ui <- page_navbar(
             uiOutput("marker_select"),
             downloadButton("download_feature_plot", "Download this feature plot")
           )
+        ),
+        fluidRow(
+          column(
+            width = 9,
+            plotOutput(("marker_violin_plot"))
+          ),
+          column(
+            width = 3,
+            downloadButton("download_violin_plot", "Download this violin plot")
+          )
         )
       )
     )

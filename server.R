@@ -8,7 +8,7 @@ source("R/plots.R")
 source("R/validation.R")
 
 server <- function(input, output) {
-  options(shiny.maxRequestSize = 1000 * 1024^2)
+  options(shiny.maxRequestSize = 2000 * 1024^2)
 
   disable("run")
   disable("download_umap")
@@ -59,6 +59,11 @@ server <- function(input, output) {
     plot_feature(seurat_obj(), marker = input$selected_marker)
   })
 
+  marker_violin_plot <- reactive({
+    req(seurat_obj())
+    plot_marker_violin(seurat_obj(), marker = input$selected_marker)
+  })
+
   output$upload_msg <- renderUI({
     req(input$file)
     filetype <- get_filetype(input$file)
@@ -95,6 +100,10 @@ server <- function(input, output) {
     feature_plot()
   })
 
+  output$marker_violin_plot <- renderPlot({
+    marker_violin_plot()
+  })
+
   output$marker_select <- renderUI({
     req(seurat_obj())
     selectizeInput(
@@ -111,7 +120,7 @@ server <- function(input, output) {
     },
     content = function(file) {
       req(umap_plot())
-      ggsave(file, plot = umap_plot(), device = "png")
+      ggsave(file, plot = umap_plot(), device = "png", width = 20, height = 15)
     }
   )
 
@@ -121,7 +130,17 @@ server <- function(input, output) {
     },
     content = function(file) {
       req(feature_plot())
-      ggsave(file, plot = feature_plot(), device = "png")
+      ggsave(file, plot = feature_plot(), device = "png", width = 20, height = 15)
+    }
+  )
+
+  output$download_violin_plot <- downloadHandler(
+    filename = function() {
+      paste0(trimws(input$file$name), "_violin_plot_", input$selected_marker, ".png")
+    },
+    content = function(file) {
+      req(marker_violin_plot())
+      ggsave(file, plot = marker_violin_plot(), device = "png")
     }
   )
 }
