@@ -122,6 +122,11 @@ server <- function(input, output) {
     }
   )
 
+  output$download_feature_button <- renderUI({
+    req(feature_plot())
+    downloadButton("download_feature_plot", "Download feature plot")
+  })
+
   output$download_feature_plot <- downloadHandler(
     filename = function() {
       paste0(trimws(input$file$name), "_feature_plot_", input$selected_marker, ".png")
