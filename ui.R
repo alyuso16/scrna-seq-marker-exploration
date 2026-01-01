@@ -1,4 +1,3 @@
-library(shiny)
 library(shinythemes)
 library(shinyjs)
 library(bslib)
@@ -6,53 +5,52 @@ library(bslib)
 ui <- page_navbar(
   title = "scRNA-seq",
   useShinyjs(),
-  tabPanel("Tab 1",
-    sidebarLayout(
-      sidebarPanel(
-        div(
-          style = "margin-bottom: 20px;",
-          fileInput("file", "File upload:", multiple = FALSE, accept = c(".h5", ".h5ad", ".rds")),
-          uiOutput("upload_msg"),
-        ),
-        div(
-          style = "margin-bottom: 20px;",
-          actionButton("run", "Run", icon = icon("play")),
-        ),
-
-        textInput("object_save_name", "Save Seurat object as:"),
-        downloadButton("download_object", "Download Seurat Object"),
+  sidebarLayout(
+    sidebarPanel(
+      div(
+        style = "margin-bottom: 20px;",
+        fileInput("file", "RDS file upload:", multiple = FALSE, accept = c(".rds"))
       ),
-      mainPanel(
-        fluidRow(
-          column(
-            width = 9,
-            plotOutput("umap_plot")
-          ),
-          column(
-            width = 3,
-            downloadButton("download_umap", "Download UMAP plot")
-          )
+      div(
+        style = "margin-bottom: 20px;",
+        input_task_button("run", "Run", icon = icon("play")),
+      ),
+      div(
+        style = "margin-bottom: 20px;",
+        uiOutput("cluster_select"),
+        uiOutput("marker_sort"),
+        uiOutput("marker_select")
+      )
+    ),
+    mainPanel(
+      fluidRow(
+        column(
+          width = 9,
+          plotOutput("umap_plot")
         ),
-        fluidRow(
-          column(
-            width = 9,
-            plotOutput(("feature_plot"))
-          ),
-          column(
-            width = 3,
-            uiOutput("marker_select"),
-            downloadButton("download_feature_plot", "Download this feature plot")
-          )
+        column(
+          width = 3,
+          uiOutput("download_umap_button")
+        )
+      ),
+      fluidRow(
+        column(
+          width = 9,
+          plotOutput(("feature_plot"))
         ),
-        fluidRow(
-          column(
-            width = 9,
-            plotOutput(("marker_violin_plot"))
-          ),
-          column(
-            width = 3,
-            downloadButton("download_violin_plot", "Download this violin plot")
-          )
+        column(
+          width = 3,
+          uiOutput("download_feature_button")
+        )
+      ),
+      fluidRow(
+        column(
+          width = 9,
+          plotOutput(("marker_violin_plot"))
+        ),
+        column(
+          width = 3,
+          uiOutput("download_violin_button")
         )
       )
     )
