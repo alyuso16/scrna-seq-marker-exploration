@@ -21,6 +21,7 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+requirements.txt
 
 # venv
 env/
@@ -30,6 +31,7 @@ venv/
 .scrna_py/
 *.conda/
 *.env/
+environment.yml
 
 # Jupyter Notebook
 .ipynb_checkpoints/
