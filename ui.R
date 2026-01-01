@@ -27,30 +27,18 @@ ui <- page_navbar(
         column(
           width = 9,
           plotOutput("umap_plot")
-        ),
-        column(
-          width = 3,
-          uiOutput("download_umap_button")
         )
       ),
       fluidRow(
         column(
           width = 9,
           plotOutput(("feature_plot"))
-        ),
-        column(
-          width = 3,
-          uiOutput("download_feature_button")
         )
       ),
       fluidRow(
         column(
           width = 9,
           plotOutput(("marker_violin_plot"))
-        ),
-        column(
-          width = 3,
-          uiOutput("download_violin_button")
         )
       )
     )

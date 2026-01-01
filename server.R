@@ -107,46 +107,4 @@ server <- function(input, output) {
       )[1]
     )
   })
-
-  output$download_umap_button <- renderUI({
-    req(umap_plot())
-    downloadButton("download_umap", "Download UMAP plot")
-  })
-
-  output$download_umap <- downloadHandler(
-    filename = function() {
-      paste0(trimws(input$file$name), "_umap.png")
-    },
-    content = function(file) {
-      ggsave(file, plot = umap_plot(), device = "png", width = 20, height = 15)
-    }
-  )
-
-  output$download_feature_button <- renderUI({
-    req(feature_plot())
-    downloadButton("download_feature_plot", "Download feature plot")
-  })
-
-  output$download_feature_plot <- downloadHandler(
-    filename = function() {
-      paste0(trimws(input$file$name), "_feature_plot_", input$selected_marker, ".png")
-    },
-    content = function(file) {
-      ggsave(file, plot = feature_plot(), device = "png", width = 20, height = 15)
-    }
-  )
-
-  output$download_violin_button <- renderUI({
-    req(marker_violin_plot())
-    downloadButton("download_violin_plot", "Download violin plot")
-  })
-
-  output$download_violin_plot <- downloadHandler(
-    filename = function() {
-      paste0(trimws(input$file$name), "_violin_plot_", input$selected_marker, ".png")
-    },
-    content = function(file) {
-      ggsave(file, plot = marker_violin_plot(), device = "png")
-    }
-  )
 }
