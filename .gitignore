@@ -5,11 +5,13 @@
 .Ruserdata
 
 # renv
+renv/
 renv/library/
 renv/python/
 renv/staging/
 renv/cache/
 renv/settings.dcf
+renv.lock
 
 # RStudio
 .Rproj.user/
