@@ -2,8 +2,8 @@ library(shinythemes)
 library(shinyjs)
 library(bslib)
 
-source("R/plots.R")
-source("R/helper.R")
+source("plots.R")
+source("helper.R")
 
 server <- function(input, output) {
   options(shiny.maxRequestSize = 2000 * 1024^2)
