@@ -1,7 +1,7 @@
 library(Seurat)
 library(tidyverse)
 
-source("helper.R")
+source("R/helper.R")
 
 plot_umap <- function(seurat_obj) {
   if (is_seurat_obj(seurat_obj)) {
