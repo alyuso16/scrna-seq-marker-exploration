@@ -2,8 +2,8 @@
 
 Preprocessing workflow for easy, automated visualization and marker exploration.
 
-![img](data/images/scrna_seq_dash.png)
-![img2](data/images/violin_plot_dash.png)
+![img](images/scrna_seq_dash.png)
+![img2](images/violin_plot_dash.png)
 
 ### Marker exploration:
 
