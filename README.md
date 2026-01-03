@@ -7,7 +7,7 @@ Preprocessing workflow for easy, automated visualization and marker exploration.
 
 ### Marker exploration:
 
-* Though the example above uses a Seurat object with already-labeled clusters, the ability to easily view expression levels of markers visually and through a violin plot allows for easier cluster identification in unlabeled objects.
+Though the example above uses a Seurat object with already-labeled clusters, the ability to easily view expression levels of markers visually and through a violin plot allows for easier cluster identification in unlabeled objects.
 
 With the knowledge that the original dataset used above is from humans, running through the preprocessing pipeline and using the marker exploration allows for efficient cluster labeling. Filtering markers by cluster and then sorting by expression metrics, all the clusters were quickly labeled. This labeling reflects the generative labeling that the SingleR package produced when run on the same unlabeled object.
 
