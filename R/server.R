@@ -18,6 +18,7 @@ server <- function(input, output) {
 
   seurat_obj <- eventReactive(input$run, {
     req(input$file)
+
     filetype <- get_filetype(input$file)
 
     if (filetype == "rds") {
@@ -27,6 +28,7 @@ server <- function(input, output) {
 
   all_markers <- reactive({
     req(seurat_obj())
+
     withProgress(
       message = "Calculating clusters...",
       value = 0,
@@ -45,13 +47,23 @@ server <- function(input, output) {
   })
 
   feature_plot <- reactive({
-    req(seurat_obj(), input$selected_marker)
-    plot_feature(seurat_obj(), marker = input$selected_marker)
+    req(seurat_obj())
+
+    if (is.null(input$marker_table_cell_clicked$value)) {
+      plot_feature(seurat_obj(), marker = all_markers()$gene[1])
+    } else {
+      plot_feature(seurat_obj(), marker = all_markers()$gene[input$marker_table_cell_clicked$row])
+    }
   })
 
   marker_violin_plot <- reactive({
-    req(seurat_obj(), input$selected_marker)
-    plot_marker_violin(seurat_obj(), marker = input$selected_marker)
+    req(seurat_obj())
+
+    if (is.null(input$marker_table_cell_clicked$value)) {
+      plot_marker_violin(seurat_obj(), marker = all_markers()$gene[1])
+    } else {
+      plot_marker_violin(seurat_obj(), marker = all_markers()$gene[input$marker_table_cell_clicked$row])
+    }
   })
 
   output$umap_plot <- renderPlot({
@@ -66,45 +78,13 @@ server <- function(input, output) {
     marker_violin_plot()
   })
 
-  output$cluster_select <- renderUI({
-    req(seurat_obj())
-    selectizeInput(
-      "selected_cluster",
-      "Filter markers by cluster:",
-      choices = c(list("All Clusters"), get_cluster_labels(seurat_obj())),
-      selected = "All Clusters"
-    )
-  })
+  output$marker_table <- renderDataTable({
+    req(seurat_obj(), all_markers())
 
-  output$marker_sort <- renderUI({
-    req(seurat_obj())
-    selectizeInput(
-      "selected_sort",
-      "Sort markers:",
-      choices = list(
-        "Expression: avg_log2FC" = 1,
-        "Expression: pct.1" = 2
-      ),
-      selected = 1
-    )
-  })
-
-  output$marker_select <- renderUI({
-    req(seurat_obj(), all_markers(), input$selected_cluster, input$selected_sort)
-
-    selectizeInput(
-      "selected_marker",
-      "Select marker gene:",
-      choices = filter_markers(
-        all_markers(),
-        input$selected_cluster,
-        input$selected_sort
-      ),
-      selected = filter_markers(
-        all_markers(),
-        input$selected_cluster,
-        input$selected_sort
-      )[1]
+    datatable(
+      all_markers(),
+      selection = "single",
+      filter = "top"
     )
   })
 }

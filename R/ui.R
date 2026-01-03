@@ -1,9 +1,10 @@
 library(shinythemes)
 library(shinyjs)
 library(bslib)
+library(DT)
 
 ui <- page_navbar(
-  title = "scRNA-seq",
+  title = "scRNA-seq Marker Explorer",
   useShinyjs(),
   sidebarLayout(
     sidebarPanel(
@@ -17,28 +18,26 @@ ui <- page_navbar(
       ),
       div(
         style = "margin-bottom: 20px;",
-        uiOutput("cluster_select"),
-        uiOutput("marker_sort"),
-        uiOutput("marker_select")
+        dataTableOutput("marker_table")
       )
     ),
     mainPanel(
       fluidRow(
         column(
           width = 9,
-          plotOutput("umap_plot")
+          plotOutput("umap_plot", height = "600px")
         )
       ),
       fluidRow(
         column(
           width = 9,
-          plotOutput(("feature_plot"))
+          plotOutput("feature_plot", height = "600px")
         )
       ),
       fluidRow(
         column(
           width = 9,
-          plotOutput(("marker_violin_plot"))
+          plotOutput("marker_violin_plot", height = "600px")
         )
       )
     )
