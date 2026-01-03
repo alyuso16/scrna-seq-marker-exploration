@@ -1,4 +1,4 @@
-## Preprocessing Pipeline for Single-Cell RNA Sequencing
+## Preprocessing Pipeline and Marker Exploration for Single-Cell RNA Sequencing
 
 Preprocessing workflow for easy, automated visualization and marker exploration.
 
