@@ -11,9 +11,9 @@ Though the example above uses a Seurat object with already-labeled clusters, the
 
 With the knowledge that the original dataset used above is from humans, running through the preprocessing pipeline and using the marker exploration allows for efficient cluster labeling. Filtering markers by cluster and then sorting by expression metrics, all the clusters were quickly labeled. This labeling reflects the generative labeling that the SingleR package produced when run on the same unlabeled object.
 
-For example, in the pictures above, we can see that the marker KLRB1 in the T/NK cells cluster has a very high avg_log2FC (average log2 fold change) metric, which measures how much a gene's expression differs between one cluster and other clusters. We can also see, visually and statistically (pct.2 = 0.002%), that it is very lowly expressed in cells outside of this cluster. Thus, since KLRB1 is a known T and NK cell marker, it supports the theory that this cluster is a T/NK cell cluster. We can progress similarly through other clusters to identify what type of cells they represent.
+For example, in the pictures above, we can see that the marker KLRB1 in the T/NK cells cluster has a very high avg_log2FC (average log2 fold change) metric, which measures how much a gene's expression differs between one cluster and other clusters. We can also see, visually and statistically (pct.2 = 0.002%), that it is very lowly expressed in cells outside of this cluster. Thus, since KLRB1 is a known T and NK cell marker, it supports the hypothesis that this cluster is a T/NK cell cluster. We can progress similarly through other clusters to identify what type of cells they represent.
 
-### Preprocessing specifics
+### Preprocessing outline
 
 Before marker exploration, a preprocessing pipeline is built primarily with the Seurat package in R:
 
